@@ -1,0 +1,36 @@
+version: 2
+
+sources:
+  - name: raw
+    database: AFRIMARKET_PULSE
+    schema: RAW
+    description: "Raw data loaded by ingest.py — append-only, never modified after load."
+    tables:
+      - name: price_history
+        description: "Daily OHLCV price data for all tracked tickers, sourced from yfinance."
+        columns:
+          - name: ticker
+            description: "Ticker symbol (e.g. NPN.JO, SPY, BTC-USD)"
+          - name: ticker_name
+            description: "Human-readable asset name"
+          - name: date
+            description: "Trading date"
+          - name: open
+          - name: high
+          - name: low
+          - name: close
+          - name: volume
+          - name: ingested_at
+            description: "Timestamp when this row was written to Snowflake"
+
+      - name: exchange_rates
+        description: "Daily USD/African-currency spot rates from open.er-api.com."
+        columns:
+          - name: base_currency
+            description: "Always USD for this project"
+          - name: quote_currency
+            description: "African currency (ZAR, EGP, NGN, KES, ETB)"
+          - name: rate
+            description: "Units of quote_currency per 1 USD"
+          - name: rate_date
+          - name: ingested_at
