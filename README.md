@@ -64,7 +64,7 @@ Executive Dashboard
 
 ---
 
-## The Dashboard
+## The Dashboard(https://flat-boat.metabaseapp.com/public/dashboard/4b88112f-2a8b-4cb0-9be2-9b0737b12f2b)
 
 Five charts, all pulling live from Snowflake:
 
