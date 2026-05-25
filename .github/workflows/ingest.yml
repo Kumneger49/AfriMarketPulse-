@@ -1,0 +1,38 @@
+name: Daily Ingestion
+
+on:
+  schedule:
+    # Runs at 23:00 UTC daily (03:00 AM Abu Dhabi time, UTC+4).
+    # US markets close at 21:00 UTC — waiting until 23:00 ensures data
+    # is fully settled before ingestion. dbt Cloud job fires at 00:00 UTC
+    # (04:00 AM Abu Dhabi), so the dashboard is fresh every morning.
+    - cron: '0 23 * * *'
+
+  # Allows manual trigger from GitHub Actions tab for testing
+  workflow_dispatch:
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install yfinance requests pandas snowflake-connector-python python-dotenv
+
+      - name: Run ingestion
+        env:
+          SNOWFLAKE_ACCOUNT:   ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER:      ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD:  ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_ROLE:      ${{ secrets.SNOWFLAKE_ROLE }}
+          SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+        run: python ingestion/ingest.py
