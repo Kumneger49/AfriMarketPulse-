@@ -1,0 +1,135 @@
+version: 2
+
+# ---------------------------------------------------------------------------
+# Staging models
+# ---------------------------------------------------------------------------
+
+models:
+  - name: stg_price_history
+    description: >
+      Cleaned and typed price data from RAW.PRICE_HISTORY.
+      One row per (ticker, trading_date). Null closes and zero-volume rows removed.
+    columns:
+      - name: ticker
+        description: "Ticker symbol"
+        data_tests:
+          - not_null
+
+      - name: price_date
+        description: "Trading date (DATE type)"
+        data_tests:
+          - not_null
+
+      - name: close_price
+        description: "Adjusted closing price"
+        data_tests:
+          - not_null
+
+      - name: ticker_name
+        data_tests:
+          - not_null
+
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - ticker
+              - price_date
+
+  - name: stg_exchange_rates
+    description: >
+      Cleaned USD/African-currency exchange rates from RAW.EXCHANGE_RATES.
+      One row per (base_currency, quote_currency, rate_date).
+    columns:
+      - name: base_currency
+        data_tests:
+          - not_null
+
+      - name: quote_currency
+        data_tests:
+          - not_null
+
+      - name: rate
+        description: "Units of quote_currency per 1 USD"
+        data_tests:
+          - not_null
+
+      - name: rate_date
+        data_tests:
+          - not_null
+
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - base_currency
+              - quote_currency
+              - rate_date
+
+# ---------------------------------------------------------------------------
+# Mart models
+# ---------------------------------------------------------------------------
+
+  - name: mart_daily_performance
+    description: >
+      One row per (ticker, trading_date) with daily returns,
+      7-day rolling average price, and 30-day rolling volatility.
+      Powers most time-series charts in the dashboard.
+    columns:
+      - name: ticker
+        data_tests:
+          - not_null
+
+      - name: price_date
+        data_tests:
+          - not_null
+
+      - name: close_price
+        data_tests:
+          - not_null
+
+      - name: rolling_30d_volatility
+        description: >
+          Standard deviation of daily_return_pct over the trailing 30 rows.
+          NULL for the first 29 rows of each ticker (insufficient history).
+
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - ticker
+              - price_date
+
+  - name: mart_executive_summary
+    description: >
+      One row per ticker. Snapshot of the latest trading day with
+      1D, 7D, 30D returns and 30D volatility. Metabase overview table reads this.
+    columns:
+      - name: ticker
+        description: "Primary key — one row per asset"
+        data_tests:
+          - not_null
+          - unique
+
+      - name: ticker_name
+        data_tests:
+          - not_null
+
+      - name: latest_close
+        description: "Most recent adjusted close price"
+        data_tests:
+          - not_null
+
+      - name: latest_price_date
+        description: "Date of the latest available trading day"
+        data_tests:
+          - not_null
+
+      - name: return_1d_pct
+        description: "1-day return as a percentage. NULL if only one day of history exists."
+
+      - name: return_7d_pct
+        description: "7-calendar-day return. NULL if fewer than 7 days of history."
+
+      - name: return_30d_pct
+        description: "30-calendar-day return. NULL if fewer than 30 days of history."
