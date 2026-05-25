@@ -50,8 +50,8 @@ TICKERS: dict[str, str] = {
     "BTC-USD": "Bitcoin USD",
 }
 
-# Five African currencies to track against USD
-CURRENCIES: list[str] = ["ZAR", "EGP", "NGN", "KES", "ETB"]
+# African currencies + Gulf currencies (Baraka's home market is UAE)
+CURRENCIES: list[str] = ["ZAR", "EGP", "NGN", "KES", "ETB", "AED", "SAR", "QAR"]
 
 FX_API_URL = "https://open.er-api.com/v6/latest/USD"
 
