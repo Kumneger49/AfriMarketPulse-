@@ -1,0 +1,15 @@
+# Credentials — never commit these
+.env
+dbt_project/profiles.yml
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# dbt
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/.user.yml
+dbt_project/logs/
