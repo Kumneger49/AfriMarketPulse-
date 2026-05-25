@@ -1,0 +1,25 @@
+name: afrimarket_pulse
+version: '1.0.0'
+config-version: 2
+
+profile: afrimarket_pulse
+
+model-paths:    ["models"]
+macro-paths:    ["macros"]
+seed-paths:     ["seeds"]
+test-paths:     ["tests"]
+analysis-paths: ["analyses"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - target
+  - dbt_packages
+
+models:
+  afrimarket_pulse:
+    staging:
+      +materialized: view
+      +schema: staging
+    marts:
+      +materialized: table
+      +schema: marts
