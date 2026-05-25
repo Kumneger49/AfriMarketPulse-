@@ -44,7 +44,7 @@ TICKERS: dict[str, str] = {
     "SBK.JO":  "Standard Bank",
     "EZA":     "iShares MSCI South Africa ETF",
     "AFK":     "VanEck Africa Index ETF",
-    "NGE":     "Global X MSCI Nigeria ETF",
+    # NGE (Global X MSCI Nigeria ETF) delisted — removed 2026-05-25
     "SPY":     "S&P 500 ETF",
     "GLD":     "Gold ETF",
     "BTC-USD": "Bitcoin USD",
