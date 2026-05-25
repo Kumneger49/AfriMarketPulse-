@@ -2,9 +2,6 @@
 
 A production-style analytics pipeline that tracks African and emerging market assets — JSE-listed equities, African ETFs, and global benchmarks — and serves a live executive dashboard updated every morning automatically.
 
-Built as interview preparation for a Data Analytics role at Baraka, a YC-backed retail investment app targeting emerging markets.
-
----
 
 ## What It Does
 
